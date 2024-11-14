@@ -1,0 +1,30 @@
+wandb_version: 1
+
+batch_size:
+  value: 1112
+epochs:
+  value: 100
+h_dim:
+  value: 32
+in_channels:
+  value: 5
+l_b:
+  value: 0.96
+l_e:
+  value: 10
+lr:
+  value: 0.01
+momentum:
+  value: 0.9
+optimizer:
+  value: adam
+p_shuffle:
+  value: 0.7
+projection_dim:
+  value: 32
+size_per_class:
+  value: 500
+temperature:
+  value: 0.3
+weight_decay:
+  value: 0.0001

@@ -1,0 +1,25 @@
+black
+ipython
+isort
+jupyterlab
+loguru==0.7.2
+matplotlib
+mkdocs
+notebook
+numpy
+pandas==2.2.3
+pip
+python-dotenv
+scikit-learn==1.5.2
+tqdm==4.67.0
+torch
+torchvision
+torchaudio 
+h5py
+wandb
+toml
+opencv-python
+torchsummary
+igraph
+community
+-e .
