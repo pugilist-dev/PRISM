@@ -1,19 +1,17 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import numpy as np
 from torchvision import transforms
-import numpy as np
 from torch.nn import SyncBatchNorm
-import random
-import cv2
-import torch
-from prism.modeling.augmentations import (
+
+import numpy as np
+
+from torchsummary import summary
+
+from prism.utils.augmentations import (
     CustomColorJitter, Cutout, GaussianNoise,
     RandomErodeDilateTransform, ZeroMask, OnesMask
 )
-import torchvision.models as models
-from torchsummary import summary
 
 
 class Encoder(nn.Module):
