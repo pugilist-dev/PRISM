@@ -105,7 +105,6 @@ pathspec==0.12.1
 pexpect==4.9.0
 pillow==11.0.0
 platformdirs==4.3.6
--e git+https://github.com/pugilist-dev/PRISM.git@93316fc747a4da4f3266d2fec2ceb217793d6d98#egg=prism
 prometheus_client==0.21.0
 prompt_toolkit==3.0.48
 protobuf==5.28.3
