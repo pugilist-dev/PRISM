@@ -11,7 +11,7 @@ import wandb
 # Configuration
 from prism.config.config import (
     MODELS_DIR, INTERIM_DATA_DIR, EXTERNAL_DATA_DIR,
-      PROCESSED_DATA_DIR, sweep_config, tune_config
+      PROCESSED_DATA_DIR, sweep_config, tune_config, aug_params
 )
 
 # Data and proprocessing imports
@@ -34,8 +34,9 @@ from prism.utils.metrics import Metrics
 
 
 class Trainer():
-    def __init__(self, config=None):
+    def __init__(self, config=None, aug_params=None):
         self.main_config = config
+        self.aug_params = aug_params
 
     def run_training(self):
         with wandb.init(mode='disabled' if self.main_config.get("debug", False) else 'online'):
@@ -101,11 +102,9 @@ class Trainer():
         self.model = Model(
             in_channels=config.in_channels,
             h_dim=config.h_dim,
-            projection_dim=config.projection_dim
+            projection_dim=config.projection_dim,
+            aug_params = self.aug_params
         ).to(self.main_config['device'])
-        if torch.cuda.device_count() > 1:
-            self.model = torch.nn.DataParallel(self.model, device_ids=[0, 1, 2])
-        self.model.to(self.main_config["device"])
     
     def train(self, config):
         for epoch in range(config.epochs):
@@ -222,7 +221,7 @@ if __name__ == "__main__":
     os.makedirs(PROCESSED_DATA_DIR / "csv", exist_ok=True)
     os.makedirs(PROCESSED_DATA_DIR / "hdf", exist_ok=True)
 
-    trainer = Trainer(tune_config)
+    trainer = Trainer(tune_config, aug_params)
     if tune_config["tune"]:
         wandb.login(key=tune_config["wandb_key"])
         sweep_id = wandb.sweep(sweep_config, project=get_repo_name())

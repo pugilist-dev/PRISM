@@ -4,6 +4,7 @@
 PYTHON = python3.12
 PIP = pip
 VENV_DIR = phenotype
+PROJECT_DIR = $(CURDIR)
 #################################################################################
 # COMMANDS                                                                      #
 #################################################################################
@@ -16,11 +17,12 @@ install:	venv
 ## Delete all compiled Python files
 clean:
 	rm -rf $(VENV_DIR)
+	rm -rf wandb
 	find . -type f -name '*.pyc' -delete
 	find . -type d -name '__pycache__' -delete
 # Lint code
 lint:
-	$(VENV_DIR)/bin/flake8 src/
+	$(VENV_DIR)/bin/flake8 prism/
 train:
-	$(VENV_DIR)/bin/$(PYTHON)	train_cl.py
+	PYTHONPATH=$(PROJECT_DIR)	$(VENV_DIR)/bin/$(PYTHON)	prism/modeling/train_cl.py
 .PHONY:	venv	install	lint	train	clean

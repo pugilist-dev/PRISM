@@ -3,7 +3,6 @@ from pathlib import Path
 from dotenv import load_dotenv
 from loguru import logger
 import yaml
-import torch
 
 # Load environment variables from .env file if it exists
 load_dotenv()
@@ -35,13 +34,27 @@ except ModuleNotFoundError:
     pass
 
 tune_config = {
-    "wandb_key" : "f8ef98e88768dcd2b7d55361a041652918a62844",
-    "tune" : True,
+    "wandb_key": "f50e7404c274fd0240b3de443ad368d762b16643",
+    "tune": True,
     "count" : 20,
     "augment" : False,
     "seed" : 42,
     "debug" : True,
     "device" : "cuda:0",
+}
+
+aug_params = {
+    "brightness": 0.2,
+    "contrast": 0.2,
+    "saturation": 0.2,
+    "hue": 0.1,
+    "rotation": 10,
+    "scale": 0.1,
+    "shear": 0.1,
+    "hflip": 0.5,
+    "vflip": 0.5,
+    "normalize": True,
+
 }
 
 with open(PROJ_ROOT / "config" / "sweep_config.yml") as f:

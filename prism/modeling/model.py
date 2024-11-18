@@ -51,9 +51,9 @@ class Encoder(nn.Module):
 class CL(nn.Module):
 
     # note: h_dim means same thing as n_features
-    def __init__(self, in_channels=5, h_dim=32, projection_dim=32): 
+    def __init__(self, in_channels=5, h_dim=32, projection_dim=32, aug_params=None): 
         super(CL, self).__init__()
-
+        self.aug = aug_params
         self.encoder = Encoder(input_channels=in_channels,output_features=h_dim)
         self.h_dim = h_dim
         self.base_size = 75
@@ -117,22 +117,22 @@ class CL(nn.Module):
     def simclr_transform(self):
         """Constructs the SimCLR data transformation pipeline."""
         transformations = []
-        color_jitter = CustomColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1)  # Assuming brightness control as an example
-        transformations.append(transforms.RandomApply([color_jitter], p=1))
-        transformations.append(transforms.RandomRotation(degrees=180))
-        transformations.append(transforms.RandomHorizontalFlip(p=0.5))
-        transformations.append(transforms.RandomVerticalFlip(p=0.5))
-        transformations.append(transforms.RandomAffine(degrees=0, translate=(0.2,0.2)))
-        #erode_dilate = RandomErodeDilateTransform(kernel_size=5, iterations=1)
-        #transformations.append(transforms.RandomApply([erode_dilate], p=0.5))
-        #transformations.append(ZeroMask(p=0.5))
-        #transformations.append(OnesMask(p=0.5))
-        blur = transforms.GaussianBlur(kernel_size=3, sigma=(0.1, 2.0))
-        transformations.append(transforms.RandomApply([blur],p=0.5))
-        transformations.append(transforms.RandomResizedCrop(size=self.base_size, scale=(0.8, 1.0)))
-        #if self.config.use_cutout:
-            #transformations.append(Cutout(n_holes=1, length=32))
-        #if self.config.use_guassian_noise:
-        #transformations.append(GaussianNoise(mean=0.0, std=0.1))
+        color_jitter = CustomColorJitter(brightness=self.aug["brightness"],
+                                          contrast=self.aug["contrast"],
+                                            saturation=self.aug["saturation"],
+                                              hue=self.aug["hue"])  # Assuming brightness control as an example
+        transformations.append(transforms.RandomApply([color_jitter],
+                                                       p=1))
+        transformations.append(transforms.RandomRotation(degrees=self.aug["rotation"]))
+        transformations.append(transforms.RandomHorizontalFlip(p=self.aug["hflip"]))
+        transformations.append(transforms.RandomVerticalFlip(p=self.aug["vflip"]))
+        transformations.append(transforms.RandomAffine(degrees=0,
+                                                        translate=(0.2,0.2)))
+        blur = transforms.GaussianBlur(kernel_size=3,
+                                        sigma=(0.1, 2.0))
+        transformations.append(transforms.RandomApply([blur],
+                                                      p=0.5))
+        transformations.append(transforms.RandomResizedCrop(size=self.base_size,
+                                                             scale=(0.8, 1.0)))
         data_transforms = transforms.Compose(transformations)
         return data_transforms
